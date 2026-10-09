@@ -1,0 +1,7 @@
+Northpad 0.1.0 installs for your Windows account only. It does not require an administrator.
+
+Your notes and files stay in %LOCALAPPDATA%\Northpad. The installer does not upload them.
+
+Search, maps, the browser, and video stay off until you allow network tools in Settings. The browser and video pages use the Microsoft WebView2 runtime. If it is missing, the installer downloads it from Microsoft.
+
+Northpad is free software under the MIT License. The next page is that license.

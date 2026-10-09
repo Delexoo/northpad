@@ -21,7 +21,7 @@ Engine: SQLite 3.53.3, bundled by SQLitePCLRaw 2.1.12 through Microsoft.Data.Sql
 
 Pragmas on each open: `foreign_keys=ON`, `journal_mode=WAL`, `synchronous=FULL`, `busy_timeout=5000`.
 
-Schema version lives in `schema_info`. Version 1 creates `settings`, `notes`, and `tasks`. Migrations run inside a transaction. A newer version number aborts without modifying the file.
+Schema version lives in `schema_info`. Version 1 creates `settings`, `notes`, and `tasks`. Version 2 adds `documents` and `files` for the later tools. Migrations run inside a transaction. A newer version number aborts without modifying the file.
 
 The database file is not encrypted by SQLCipher. Microsoft.Data.Sqlite's default native library does not implement database encryption. Sensitive text is encrypted by the application before it is stored in BLOB columns.
 
@@ -41,6 +41,9 @@ Associated data is `northpad:<record>:<field>:v1:<guid>`. A blob moved to anothe
 | Created and updated timestamps | Plaintext ISO-8601 UTC |
 | Task completed flag, priority, due date | Plaintext |
 | Theme setting | Plaintext |
+| Document kind and sort key (a date, for calendar and reminders) | Plaintext |
+| File size and file kind | Plaintext |
+| Original file name | Encrypted |
 | Wrapped data key | DPAPI blob, or passphrase wrap plus recovery wrap |
 
 Ciphertext length tracks plaintext length. Northpad does not pad fields in this version.

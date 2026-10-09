@@ -6,7 +6,7 @@
     </UserControl.InputBindings>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="280"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,1,0" Padding="16,20,12,16">
@@ -60,13 +60,48 @@
                 <Button DockPanel.Dock="Right" Content="Delete" Style="{StaticResource QuietButton}" Command="{Binding DeleteNoteCommand}" AutomationProperties.Name="Delete note"/>
                 <TextBlock Text="{Binding Status}" Style="{StaticResource MutedText}" VerticalAlignment="Center"/>
             </DockPanel>
-            <TextBox Grid.Row="1" Style="{StaticResource PlainText}" FontSize="26" FontWeight="SemiBold"
+            <TextBox Grid.Row="1" Style="{StaticResource PlainText}" FontSize="28" FontWeight="SemiBold"
                      Text="{Binding EditorTitle, UpdateSourceTrigger=PropertyChanged}"
                      AutomationProperties.Name="Note title"/>
-            <TextBox Grid.Row="2" Style="{StaticResource PlainText}" AcceptsReturn="True" TextWrapping="Wrap"
-                     VerticalScrollBarVisibility="Auto" Margin="0,12,0,0"
-                     Text="{Binding EditorBody, UpdateSourceTrigger=PropertyChanged}"
-                     AutomationProperties.Name="Note"/>
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,8,0,0">
+                <StackPanel>
+                    <ItemsControl ItemsSource="{Binding Blocks}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="0,10">
+                                    <StackPanel>
+                                        <DockPanel Margin="0,0,0,6">
+                                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                                <Button Content="Up" Style="{StaticResource QuietButton}" Margin="0,0,4,0" Command="{Binding DataContext.MoveBlockUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                                <Button Content="Down" Style="{StaticResource QuietButton}" Margin="0,0,4,0" Command="{Binding DataContext.MoveBlockDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                                <Button Content="Remove" Style="{StaticResource QuietButton}" Command="{Binding DataContext.DeleteBlockCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                            </StackPanel>
+                                            <ComboBox Width="120" HorizontalAlignment="Left"
+                                                      ItemsSource="{Binding Kinds}"
+                                                      DisplayMemberPath="Label"
+                                                      SelectedValuePath="Id"
+                                                      SelectedValue="{Binding Type, Mode=TwoWay}"/>
+                                        </DockPanel>
+                                        <TextBox Style="{StaticResource PlainText}" AcceptsReturn="True" TextWrapping="Wrap"
+                                                 Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                                                 Visibility="{Binding ShowsText, Converter={StaticResource BoolToVis}}"
+                                                 AutomationProperties.Name="Note block"/>
+                                        <CheckBox Content="Done" Margin="0,6,0,0" IsChecked="{Binding Done}"
+                                                  Visibility="{Binding ShowsDone, Converter={StaticResource BoolToVis}}"/>
+                                        <Image MaxHeight="280" Margin="0,8,0,0" Stretch="Uniform" HorizontalAlignment="Left"
+                                               Source="{Binding Preview}"
+                                               Visibility="{Binding ShowsImage, Converter={StaticResource BoolToVis}}"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <StackPanel Orientation="Horizontal" Margin="0,14,0,8">
+                        <Button Content="Add block" Style="{StaticResource QuietButton}" Margin="0,0,8,0" Command="{Binding AddBlockCommand}"/>
+                        <Button Content="Add picture" Style="{StaticResource QuietButton}" Command="{Binding AddPictureCommand}"/>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
             <TextBlock Grid.Row="3" Text="{Binding Error}" Foreground="{DynamicResource Brush.Danger}" TextWrapping="Wrap" Margin="0,8,0,0"/>
         </Grid>
     </Grid>

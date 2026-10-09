@@ -4,7 +4,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <StackPanel MaxWidth="880" HorizontalAlignment="Left" Margin="36,32,36,40">
             <TextBlock Text="Apps" FontSize="28" FontWeight="SemiBold"/>
-            <TextBlock Text="Tools stored on this computer." Style="{StaticResource MutedText}" Margin="0,6,0,28"/>
+            <TextBlock Text="Local tools. Search, maps, the browser, and video stay offline until you allow network." Style="{StaticResource MutedText}" Margin="0,6,0,28"/>
             <ItemsControl ItemsSource="{Binding Modules}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

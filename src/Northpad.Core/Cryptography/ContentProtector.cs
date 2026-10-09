@@ -9,6 +9,10 @@ public interface IContentProtector
     byte[] Protect(string plaintext, string context);
 
     string Unprotect(byte[] payload, string context);
+
+    byte[] ProtectBytes(ReadOnlySpan<byte> plaintext, string context);
+
+    byte[] UnprotectBytes(byte[] payload, string context);
 }
 
 public sealed class ContentProtector : IContentProtector
@@ -46,4 +50,10 @@ public sealed class ContentProtector : IContentProtector
             CryptographicOperations.ZeroMemory(bytes);
         }
     }
+
+    public byte[] ProtectBytes(ReadOnlySpan<byte> plaintext, string context) =>
+        AesGcmCipher.Encrypt(_session.DataKey, plaintext, Encoding.UTF8.GetBytes(context));
+
+    public byte[] UnprotectBytes(byte[] payload, string context) =>
+        AesGcmCipher.Decrypt(_session.DataKey, payload, Encoding.UTF8.GetBytes(context));
 }

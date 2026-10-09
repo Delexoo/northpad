@@ -10,6 +10,7 @@ public sealed class AppPaths
         KeyPath = Path.Combine(root, "vault.key");
         LogDirectory = Path.Combine(root, "logs");
         LogPath = Path.Combine(LogDirectory, "northpad.log");
+        FilesDirectory = Path.Combine(root, "files");
     }
 
     public string Root { get; }
@@ -21,6 +22,8 @@ public sealed class AppPaths
     public string LogDirectory { get; }
 
     public string LogPath { get; }
+
+    public string FilesDirectory { get; }
 
     public static AppPaths ForDefaultLocation()
     {
@@ -34,5 +37,6 @@ public sealed class AppPaths
     {
         Directory.CreateDirectory(Root);
         Directory.CreateDirectory(LogDirectory);
+        Directory.CreateDirectory(FilesDirectory);
     }
 }

@@ -21,7 +21,7 @@
 
             <TextBlock Text="Privacy and security" Style="{StaticResource SectionTitle}" Margin="0,28,0,8"/>
             <TextBlock Text="{Binding ProtectionSummary}" Style="{StaticResource MutedText}"/>
-            <TextBlock Text="Note text and task text are encrypted with AES-256-GCM before they are written. Timestamps, task completion, priority, and due dates are stored unencrypted so lists can be ordered. Northpad does not send this data anywhere."
+            <TextBlock Text="Notes, tasks, mail, passwords, files, and the other local tools encrypt their text with AES-256-GCM. Some dates stay readable so calendars and lists can be ordered. Northpad does not send that data anywhere."
                        Style="{StaticResource MutedText}" Margin="0,8,0,12"/>
             <WrapPanel>
                 <Button Content="Set passphrase" Style="{StaticResource PrimaryButton}" Margin="0,0,8,8"
@@ -49,6 +49,14 @@
                 <Button Content="Export backup" Style="{StaticResource QuietButton}" Margin="0,0,8,8" Command="{Binding ExportBackupCommand}"/>
                 <Button Content="Delete local data" Style="{StaticResource QuietButton}" Margin="0,0,8,8" Command="{Binding DeleteWorkspaceCommand}"/>
             </WrapPanel>
+
+            <TextBlock Text="Network" Style="{StaticResource SectionTitle}" Margin="0,20,0,8"/>
+            <TextBlock Text="Off by default. Search uses SearXNG. Maps use OpenStreetMap. Video uses an open-source YouTube frontend. Those servers see the request. Northpad does not add an account, analytics, or an AI service."
+                       Style="{StaticResource MutedText}" TextWrapping="Wrap" Margin="0,0,0,12"/>
+            <CheckBox Content="Allow network tools" IsChecked="{Binding NetworkAllowed}" Margin="0,0,0,12"/>
+            <TextBox Style="{StaticResource InputText}" Margin="0,0,0,8" Text="{Binding SearchBase, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Search address"/>
+            <TextBox Style="{StaticResource InputText}" Margin="0,0,0,8" Text="{Binding VideoTemplate, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Video address"/>
+            <Button Content="Save network settings" Style="{StaticResource QuietButton}" HorizontalAlignment="Left" Margin="0,0,0,8" Command="{Binding SaveNetworkCommand}"/>
 
             <TextBlock Text="Account" Style="{StaticResource SectionTitle}" Margin="0,20,0,8"/>
             <TextBlock Text="Northpad does not use an account. Nothing on this screen signs you in." Style="{StaticResource MutedText}"/>

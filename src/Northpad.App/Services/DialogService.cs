@@ -5,7 +5,7 @@ using Northpad.Core;
 
 namespace Northpad.App.Services;
 
-public sealed class DialogService : IUserConfirmation
+public sealed class DialogService : IUserConfirmation, IFilePicker
 {
     public bool Confirm(string title, string message) =>
         ConfirmChecked(title, message, "Delete this item from this computer", "Delete");
@@ -191,6 +191,31 @@ public sealed class DialogService : IUserConfirmation
         };
         window.Closing += (_, args) => args.Cancel = !acknowledged;
         window.ShowDialog();
+    }
+
+    public void Notify(string title, string message) => ShowMessage(title, message);
+
+    public string? PickOpen(string title, string filter)
+    {
+        var dialog = new OpenFileDialog
+        {
+            Title = title,
+            Filter = filter,
+            CheckFileExists = true,
+        };
+        return dialog.ShowDialog() == true ? dialog.FileName : null;
+    }
+
+    public string? PickSave(string title, string suggestedFileName, string filter)
+    {
+        var dialog = new SaveFileDialog
+        {
+            Title = title,
+            FileName = suggestedFileName,
+            Filter = filter,
+            OverwritePrompt = true,
+        };
+        return dialog.ShowDialog() == true ? dialog.FileName : null;
     }
 
     public string? PickFolder(string title)

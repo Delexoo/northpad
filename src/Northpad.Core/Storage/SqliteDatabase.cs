@@ -151,7 +151,7 @@ public sealed class SqliteDatabase : IDisposable
 
 internal static class SchemaMigrator
 {
-    public const int CurrentVersion = 1;
+    public const int CurrentVersion = 2;
 
     public static void Apply(SqliteConnection connection, int fromVersion)
     {
@@ -190,6 +190,35 @@ internal static class SchemaMigrator
                 );
 
                 INSERT INTO schema_info (id, version) VALUES (1, 1);
+                """;
+            command.ExecuteNonQuery();
+        }
+
+        if (fromVersion < 2)
+        {
+            using var command = connection.CreateCommand();
+            command.CommandText =
+                """
+                CREATE TABLE documents (
+                    id TEXT PRIMARY KEY,
+                    kind TEXT NOT NULL,
+                    payload BLOB NOT NULL,
+                    sort_key TEXT,
+                    created_utc TEXT NOT NULL,
+                    updated_utc TEXT NOT NULL
+                );
+
+                CREATE INDEX idx_documents_kind ON documents(kind, sort_key);
+
+                CREATE TABLE files (
+                    id TEXT PRIMARY KEY,
+                    kind TEXT NOT NULL,
+                    name BLOB NOT NULL,
+                    size INTEGER NOT NULL,
+                    created_utc TEXT NOT NULL
+                );
+
+                UPDATE schema_info SET version = 2 WHERE id = 1;
                 """;
             command.ExecuteNonQuery();
         }

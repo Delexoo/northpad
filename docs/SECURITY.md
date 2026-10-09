@@ -42,7 +42,7 @@ The data key is pinned for the session and zeroed on lock. That reduces but does
 
 ## Network
 
-The application project does not reference an HTTP client and does not open a WebView. Map tiles, sync, and telemetry are not implemented. Adding any of them later requires an explicit opt-in described in the roadmap.
+Network tools are off until Settings allows them. Search then uses the SearXNG address you set (searx.be by default). Maps request tiles from tile.openstreetmap.org and, if you search for a place, from Nominatim. YouTube opens the Piped frontend; playback can also request video files from YouTube's servers. The browser uses Windows WebView2 and opens only addresses you enter. Translate sends text only to a LibreTranslate address you type, and it refuses Google, Microsoft, Apple, and DeepL hosts. There is no telemetry and no AI service.
 
 ## Files you should not publish
 

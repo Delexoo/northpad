@@ -2,7 +2,7 @@
 
 Northpad is a local-first Windows desktop workspace. It opens Notes and Todo inside one window, keeps their text encrypted on disk, and does not require an account or a network connection.
 
-Version 0.1.0 includes the application shell, settings, Notes, and Todo. Calendar, Journal, Files, Wallet, Maps, Messages, and synchronization are not in this version. See [docs/ROADMAP.md](docs/ROADMAP.md).
+Version 0.1.0 includes Notes, Todo, Calendar, Reminders, Mail, Photos, Drive, Sheets, Passwords, Translate, and Wallet on this computer. Search, the browser, Maps, and YouTube stay off until network tools are allowed in Settings. See [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## Privacy in this version
 
@@ -18,6 +18,12 @@ Version 0.1.0 includes the application shell, settings, Notes, and Todo. Calenda
 - .NET 10 SDK to build. The .NET 10 Windows Desktop runtime is required to run a framework-dependent build.
 
 This repository was developed with the .NET SDK 10.0.103.
+
+## Install
+
+The Windows installer is `Northpad-Setup-0.1.0.exe`. It is built for 64-bit Windows 10 version 1809 or later, installs for the current user, and includes the .NET runtime. It shows the MIT license before copying files and installs `THIRD_PARTY_NOTICES.txt` beside the app. If Microsoft Edge WebView2 is missing, the installer adds it so the browser, search, and video tools can run. Notes, files, and passwords do not need it.
+
+Download it from [https://northpad.vercel.app](https://northpad.vercel.app).
 
 ## Build and run
 

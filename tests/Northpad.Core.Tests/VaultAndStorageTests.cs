@@ -108,7 +108,7 @@ public class VaultAndStorageTests
             command.CommandText = "SELECT version FROM schema_info WHERE id = 1;";
             return (long)command.ExecuteScalar()!;
         });
-        Assert.Equal(1, version);
+        Assert.Equal(2, version);
 
         workspace.Database.Execute(connection =>
         {
@@ -212,7 +212,10 @@ public class VaultAndStorageTests
     [Fact]
     public void Catalog_registers_notes_and_todo()
     {
-        Assert.Equal([KnownModules.Notes, KnownModules.Todo], KnownModules.All.Select(module => module.Id).ToArray());
+        var ids = KnownModules.All.Select(module => module.Id).ToArray();
+        Assert.Contains(KnownModules.Notes, ids);
+        Assert.Contains(KnownModules.Todo, ids);
+        Assert.Equal(ids.Length, ids.Distinct(StringComparer.Ordinal).Count());
     }
 
     [Fact]

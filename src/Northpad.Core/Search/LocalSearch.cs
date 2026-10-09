@@ -1,5 +1,7 @@
+using System.Text.Json;
 using Northpad.Core.Models;
 using Northpad.Core.Modules;
+using Northpad.Core.Storage;
 
 namespace Northpad.Core.Search;
 
@@ -8,7 +10,8 @@ public static class LocalSearch
     public static IReadOnlyList<SearchHit> Find(
         string? query,
         IReadOnlyList<NoteRecord> notes,
-        IReadOnlyList<TaskRecord> tasks)
+        IReadOnlyList<TaskRecord> tasks,
+        IReadOnlyList<StoredDocument>? documents = null)
     {
         if (string.IsNullOrWhiteSpace(query))
         {
@@ -19,13 +22,14 @@ public static class LocalSearch
         var hits = new List<SearchHit>();
         foreach (var note in notes)
         {
-            if (Contains(note.Title, needle) || Contains(note.Body, needle))
+            var plain = NoteDocument.PlainText(note.Body);
+            if (Contains(note.Title, needle) || Contains(plain, needle))
             {
                 hits.Add(new SearchHit(
                     KnownModules.Notes,
                     note.Id,
                     Display(note.Title, "Untitled note"),
-                    Excerpt(note.Body, needle)));
+                    Excerpt(plain, needle)));
             }
         }
 
@@ -41,8 +45,42 @@ public static class LocalSearch
             }
         }
 
+        if (documents is not null)
+        {
+            foreach (var document in documents)
+            {
+                if (document.Kind == DocumentKinds.Password)
+                {
+                    continue;
+                }
+
+                var text = JsonText.Collect(document.Payload);
+                if (!Contains(text, needle))
+                {
+                    continue;
+                }
+
+                hits.Add(new SearchHit(
+                    ModuleFor(document.Kind),
+                    document.Id,
+                    Display(JsonText.First(document.Payload), "Untitled"),
+                    Excerpt(text, needle)));
+            }
+        }
+
         return hits;
     }
+
+    private static string ModuleFor(string kind) => kind switch
+    {
+        DocumentKinds.Calendar => KnownModules.Calendar,
+        DocumentKinds.Reminder => KnownModules.Reminders,
+        DocumentKinds.Mail => KnownModules.Mail,
+        DocumentKinds.Sheet => KnownModules.Sheets,
+        DocumentKinds.Wallet => KnownModules.Wallet,
+        DocumentKinds.Glossary => KnownModules.Translate,
+        _ => kind,
+    };
 
     private static bool Contains(string value, string needle) =>
         value.Contains(needle, StringComparison.OrdinalIgnoreCase);

@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Northpad.Core;
 using Northpad.Core.Vault;
+using Northpad.Modules.Apps;
 
 namespace Northpad.App.Shell;
 
@@ -13,13 +14,15 @@ public partial class ShellViewModel : ObservableObject, INavigationService
 {
     private readonly IServiceProvider _services;
     private readonly IVaultService _vault;
+    private readonly ReminderMonitor _reminders;
     private readonly ILogger<ShellViewModel> _logger;
     private object? _current;
 
-    public ShellViewModel(IServiceProvider services, IVaultService vault, ILogger<ShellViewModel> logger)
+    public ShellViewModel(IServiceProvider services, IVaultService vault, ReminderMonitor reminders, ILogger<ShellViewModel> logger)
     {
         _services = services;
         _vault = vault;
+        _reminders = reminders;
         _logger = logger;
     }
 
@@ -125,6 +128,7 @@ public partial class ShellViewModel : ObservableObject, INavigationService
         }
 
         ReleaseCurrent();
+        _reminders.Stop();
         _vault.Lock();
         IsUnlocked = false;
         ShowLock();
@@ -135,6 +139,7 @@ public partial class ShellViewModel : ObservableObject, INavigationService
         IsUnlocked = _vault.IsUnlocked;
         if (IsUnlocked)
         {
+            _reminders.Start();
             GoHome();
         }
     }

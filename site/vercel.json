@@ -7,6 +7,13 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
       ]
+    },
+    {
+      "source": "/Northpad-Setup-0.1.0.exe",
+      "headers": [
+        { "key": "Content-Type", "value": "application/octet-stream" },
+        { "key": "Content-Disposition", "value": "attachment; filename=\"Northpad-Setup-0.1.0.exe\"" }
+      ]
     }
   ]
 }

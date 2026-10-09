@@ -12,6 +12,7 @@ using Northpad.Core.Cryptography;
 using Northpad.Core.Logging;
 using Northpad.Core.Storage;
 using Northpad.Core.Vault;
+using Northpad.Modules.Apps;
 using Northpad.Modules.Notes;
 using Northpad.Modules.Todo;
 
@@ -61,6 +62,11 @@ public partial class App : Application
         services.AddSingleton<INoteRepository, NoteRepository>();
         services.AddSingleton<ITaskRepository, TaskRepository>();
         services.AddSingleton<ISettingsStore, SettingsStore>();
+        services.AddSingleton<IDocumentRepository, DocumentRepository>();
+        services.AddSingleton<IFileStore, EncryptedFileStore>();
+        services.AddSingleton<INetworkPreferences, NetworkPreferences>();
+        services.AddSingleton<IFilePicker>(sp => sp.GetRequiredService<DialogService>());
+        services.AddSingleton<ReminderMonitor>();
         services.AddSingleton<DialogService>();
         services.AddSingleton<IUserConfirmation>(sp => sp.GetRequiredService<DialogService>());
         services.AddSingleton<IThemeService, ThemeManager>();
@@ -78,6 +84,31 @@ public partial class App : Application
         services.AddTransient<NotesView>();
         services.AddTransient<TodoViewModel>();
         services.AddTransient<TodoView>();
+        services.AddTransient<CalendarViewModel>();
+        services.AddTransient<CalendarView>();
+        services.AddTransient<RemindersViewModel>();
+        services.AddTransient<RemindersView>();
+        services.AddTransient<MailViewModel>();
+        services.AddTransient<MailView>();
+        services.AddTransient<BrowserViewModel>();
+        services.AddTransient<BrowserView>();
+        services.AddTransient<PhotosViewModel>();
+        services.AddTransient<DriveViewModel>();
+        services.AddTransient<LibraryView>();
+        services.AddTransient<MapsViewModel>();
+        services.AddTransient<MapsView>();
+        services.AddTransient<WebSearchViewModel>();
+        services.AddTransient<WebSearchView>();
+        services.AddTransient<VideoViewModel>();
+        services.AddTransient<VideoView>();
+        services.AddTransient<PasswordsViewModel>();
+        services.AddTransient<PasswordsView>();
+        services.AddTransient<SheetsViewModel>();
+        services.AddTransient<SheetsView>();
+        services.AddTransient<TranslateViewModel>();
+        services.AddTransient<TranslateView>();
+        services.AddTransient<WalletViewModel>();
+        services.AddTransient<WalletView>();
         services.AddTransient<MainWindow>();
 
         _services = services.BuildServiceProvider();
@@ -88,6 +119,10 @@ public partial class App : Application
         var shell = _services.GetRequiredService<ShellViewModel>();
         shell.Start();
         window.Show();
+        if (shell.IsUnlocked)
+        {
+            _services.GetRequiredService<ReminderMonitor>().Start();
+        }
         _logger.LogInformation("Application ready in {ElapsedMs} ms.", ready.Elapsed.TotalMilliseconds.ToString("F0"));
     }
 
@@ -95,6 +130,7 @@ public partial class App : Application
     {
         if (_services is not null)
         {
+            _services.GetService<ReminderMonitor>()?.Dispose();
             _services.GetService<ShellViewModel>()?.FlushCurrent();
             _services.GetService<VaultService>()?.Dispose();
             _services.GetService<SqliteDatabase>()?.Dispose();

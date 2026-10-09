@@ -26,6 +26,7 @@
     <ProjectReference Include="..\Northpad.Core\Northpad.Core.csproj" />
     <ProjectReference Include="..\Northpad.Modules.Notes\Northpad.Modules.Notes.csproj" />
     <ProjectReference Include="..\Northpad.Modules.Todo\Northpad.Modules.Todo.csproj" />
+    <ProjectReference Include="..\Northpad.Modules.Apps\Northpad.Modules.Apps.csproj" />
   </ItemGroup>
 
 </Project>

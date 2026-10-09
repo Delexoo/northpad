@@ -19,19 +19,22 @@ public partial class SettingsViewModel : ObservableObject
     private readonly AppPaths _paths;
     private readonly DialogService _dialogs;
     private readonly INavigationService _navigation;
+    private readonly INetworkPreferences _network;
 
     public SettingsViewModel(
         IVaultService vault,
         IThemeService themeService,
         AppPaths paths,
         DialogService dialogs,
-        INavigationService navigation)
+        INavigationService navigation,
+        INetworkPreferences network)
     {
         _vault = vault;
         _themeService = themeService;
         _paths = paths;
         _dialogs = dialogs;
         _navigation = navigation;
+        _network = network;
         VersionText = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.1.0";
         RuntimeText = RuntimeInformation.FrameworkDescription;
     }
@@ -55,6 +58,15 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private string _status = string.Empty;
 
+    [ObservableProperty]
+    private bool _networkAllowed;
+
+    [ObservableProperty]
+    private string _searchBase = string.Empty;
+
+    [ObservableProperty]
+    private string _videoTemplate = string.Empty;
+
     public void Refresh()
     {
         Theme = _themeService.Preference switch
@@ -68,7 +80,28 @@ public partial class SettingsViewModel : ObservableObject
         ProtectionSummary = PassphraseEnabled
             ? "A passphrase wraps the vault key. While Northpad is unlocked, that key is in memory. The recovery key is the only other way to unwrap it."
             : "The vault key is protected by this Windows account. Another Windows user cannot unwrap it. A program running as you can. A passphrase adds a lock screen.";
+        NetworkAllowed = _network.IsAllowed;
+        SearchBase = _network.SearchBase;
+        VideoTemplate = _network.VideoTemplate;
         Status = string.Empty;
+    }
+
+    [RelayCommand]
+    private void SaveNetwork()
+    {
+        try
+        {
+            _network.SetAllowed(NetworkAllowed);
+            _network.SetSearchBase(SearchBase);
+            _network.SetVideoTemplate(VideoTemplate);
+            Status = NetworkAllowed
+                ? "Network tools can reach the search and video addresses above."
+                : "Network tools stay off.";
+        }
+        catch (Exception exception) when (exception is VaultStateException)
+        {
+            Status = exception.Message;
+        }
     }
 
     [RelayCommand]

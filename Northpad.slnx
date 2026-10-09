@@ -4,6 +4,7 @@
     <Project Path="src/Northpad.Core/Northpad.Core.csproj" />
     <Project Path="src/Northpad.Modules.Notes/Northpad.Modules.Notes.csproj" />
     <Project Path="src/Northpad.Modules.Todo/Northpad.Modules.Todo.csproj" />
+    <Project Path="src/Northpad.Modules.Apps/Northpad.Modules.Apps.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Northpad.Core.Tests/Northpad.Core.Tests.csproj" />

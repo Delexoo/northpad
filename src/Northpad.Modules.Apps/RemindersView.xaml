@@ -1,0 +1,29 @@
+<UserControl x:Class="Northpad.Modules.Apps.RemindersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel MaxWidth="760" HorizontalAlignment="Left" Margin="28,24,28,32">
+            <TextBlock Text="Reminders" FontSize="26" FontWeight="SemiBold"/>
+            <TextBlock Text="{Binding Status}" Style="{StaticResource MutedText}" Margin="0,6,0,16"/>
+            <TextBox Style="{StaticResource InputText}" Margin="0,0,0,8" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Reminder title"/>
+            <TextBox Style="{StaticResource InputText}" Margin="0,0,0,8" Text="{Binding Due, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Reminder due"/>
+            <Button Content="Add reminder" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Command="{Binding AddCommand}"/>
+            <ItemsControl ItemsSource="{Binding Items}" Margin="0,18,0,0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel Margin="0,8">
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                <Button Content="Done" Style="{StaticResource QuietButton}" Margin="0,0,8,0" Command="{Binding DataContext.ToggleCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                <Button Content="Delete" Style="{StaticResource QuietButton}" Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Title}"/>
+                                <TextBlock Text="{Binding Due}" Style="{StaticResource MutedText}"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

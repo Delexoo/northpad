@@ -30,7 +30,7 @@ Colors are brushes in `Themes/Colors.xaml`. `ThemeManager` recolors them for lig
 
 ## Storage
 
-One SQLite database, `northpad.db`, opened through `Microsoft.Data.Sqlite`. `SqliteDatabase` serializes operations with a semaphore, sets WAL and `synchronous=FULL`, and applies schema version 1 inside a transaction. A database newer than this build is left untouched.
+One SQLite database, `northpad.db`, opened through `Microsoft.Data.Sqlite`. `SqliteDatabase` serializes operations with a semaphore, sets WAL and `synchronous=FULL`, and applies schema version 2 inside a transaction. A database newer than this build is left untouched.
 
 `NoteRepository` and `TaskRepository` are the only writers for their tables. Note title and body, and task title and details, are encrypted with a field-specific associated-data string that includes the record id. Other columns are plaintext and are listed in [DATA_STORAGE.md](DATA_STORAGE.md).
 

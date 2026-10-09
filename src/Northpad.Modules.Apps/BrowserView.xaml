@@ -1,0 +1,16 @@
+<UserControl x:Class="Northpad.Modules.Apps.BrowserView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Northpad.Modules.Apps">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Margin="16,12">
+            <TextBlock Text="{Binding Status}" Style="{StaticResource MutedText}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Content="Allow network" Style="{StaticResource QuietButton}" Margin="8,0,0,0" Command="{Binding AllowNetworkCommand}" Visibility="{Binding NetworkAllowed, Converter={StaticResource InverseBool}}"/>
+                <Button DockPanel.Dock="Right" Content="Open" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0" Command="{Binding GoCommand}"/>
+                <TextBox Style="{StaticResource InputText}" Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Address"/>
+            </DockPanel>
+        </StackPanel>
+        <local:PrivateWeb x:Name="Page"/>
+    </DockPanel>
+</UserControl>

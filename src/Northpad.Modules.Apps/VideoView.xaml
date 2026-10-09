@@ -1,0 +1,18 @@
+<UserControl x:Class="Northpad.Modules.Apps.VideoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Northpad.Modules.Apps">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Margin="16,12">
+            <TextBlock Text="YouTube" FontSize="22" FontWeight="SemiBold"/>
+            <TextBlock Text="{Binding Status}" Style="{StaticResource MutedText}" TextWrapping="Wrap" Margin="0,6,0,8"/>
+            <TextBox Style="{StaticResource InputText}" Margin="0,0,0,8" Text="{Binding Template, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Video frontend"/>
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Content="Allow network" Style="{StaticResource QuietButton}" Margin="8,0,0,0" Command="{Binding AllowNetworkCommand}" Visibility="{Binding NetworkAllowed, Converter={StaticResource InverseBool}}"/>
+                <Button DockPanel.Dock="Right" Content="Open" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0" Command="{Binding SearchCommand}"/>
+                <TextBox Style="{StaticResource InputText}" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Video search"/>
+            </DockPanel>
+        </StackPanel>
+        <local:PrivateWeb x:Name="Page"/>
+    </DockPanel>
+</UserControl>

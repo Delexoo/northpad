@@ -239,6 +239,11 @@ public sealed class VaultService : IVaultService, IDisposable
 
         File.Copy(_paths.DatabasePath, databaseDestination);
         File.Copy(_paths.KeyPath, keyDestination);
+        if (Directory.Exists(_paths.FilesDirectory))
+        {
+            CopyDirectory(_paths.FilesDirectory, Path.Combine(destinationDirectory, "files"));
+        }
+
         File.WriteAllText(Path.Combine(destinationDirectory, "README.txt"), BackupNotice(), Encoding.UTF8);
         _logger.LogInformation("Exported a local backup.");
     }
@@ -252,6 +257,10 @@ public sealed class VaultService : IVaultService, IDisposable
         DeleteIfExists(_paths.DatabasePath + "-shm");
         DeleteIfExists(_paths.KeyPath);
         DeleteIfExists(_paths.KeyPath + ".tmp");
+        if (Directory.Exists(_paths.FilesDirectory))
+        {
+            Directory.Delete(_paths.FilesDirectory, recursive: true);
+        }
         CreateWindowsAccountVault();
         _database.Migrate();
         Protection = VaultProtection.WindowsAccount;
@@ -430,7 +439,8 @@ public sealed class VaultService : IVaultService, IDisposable
             Northpad backup
             ===============
 
-            This folder contains a copy of the local database and the wrapped vault key.
+            This folder contains a copy of the local database, the wrapped vault key,
+            and the encrypted files folder when one exists.
             It does not contain the unwrapped data key.
 
             """ + protection + """
@@ -442,6 +452,15 @@ public sealed class VaultService : IVaultService, IDisposable
             the workspace unreadable. Northpad will not invent a new key for an
             existing database.
             """;
+    }
+
+    private static void CopyDirectory(string source, string destination)
+    {
+        Directory.CreateDirectory(destination);
+        foreach (var file in Directory.EnumerateFiles(source))
+        {
+            File.Copy(file, Path.Combine(destination, Path.GetFileName(file)));
+        }
     }
 
     private static void DeleteIfExists(string path)
